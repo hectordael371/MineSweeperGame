@@ -10,13 +10,15 @@ public class MineSweeperInterface extends JPanel {
     private static final int GRID_X = 25;
     private static final int GRID_Y = 25;
     private static final int INNER_CELL_SIZE = 29;
-    private static final int TOTAL_COLUMNS = 10;
-    private static final int TOTAL_ROWS = 10;   
+    
+    public int TOTAL_COLUMNS = 10;
+    public int TOTAL_ROWS = 10;   
     public int x = -1;
     public int y = -1;
     public int mouseDownGridX = 0;
     public int mouseDownGridY = 0;
     public Color[][] colorArray = new Color[TOTAL_COLUMNS][TOTAL_ROWS];
+    public boolean[][] booleanArray = new boolean[TOTAL_COLUMNS][TOTAL_ROWS];
     
     public MineSweeperInterface() {   //This is the constructor... this code runs first to initialize
         if (INNER_CELL_SIZE + (new Random()).nextInt(1) < 1) {    //Use of "random" to prevent unwanted Eclipse warning
@@ -115,4 +117,132 @@ public class MineSweeperInterface extends JPanel {
         }
         return y;
     }
+    public void placeBombs(){
+    	Random r = new Random();
+    	int numBombs = 10;
+    	
+    	//Set all bombs to false
+		for(int n=0; n<TOTAL_COLUMNS; n++){
+			for(int m=0; m<TOTAL_ROWS; m++){
+                booleanArray[n][m] = false;
+			}
+		}  	
+    	for(int i=0; i<numBombs; i++){
+    		
+    		int n = r.nextInt(TOTAL_COLUMNS);
+    		int m = r.nextInt(TOTAL_ROWS);
+    		
+    		while(booleanArray[n][m] || (n == mouseDownGridX && m == mouseDownGridY)){ 
+    			//This is to avoid setting a random bomb on top of another random bomb or on the clicked grid.
+    			n = r.nextInt(TOTAL_COLUMNS);
+    			m = r.nextInt(TOTAL_ROWS);
+    		}
+    		
+    		booleanArray[n][m] = true;
+    	}
+    }
+    public int searchBombs(){
+    int count = 0;
+    if(mouseDownGridX==0 && mouseDownGridY ==0){
+    	//Bottom Top corner
+    	for(int n=mouseDownGridX; n<=mouseDownGridX+1; n++){
+    		for(int m=mouseDownGridY; m<=mouseDownGridY+1;m++){
+    			if(!(n==mouseDownGridX && m==mouseDownGridY))
+    				if(booleanArray[n][m])
+    					count++;
+    		}
+    	}
+    }
+    else if(mouseDownGridX==0 && (mouseDownGridY>0 && mouseDownGridY<TOTAL_ROWS-1)){
+    	//Left wall
+    	for(int n=mouseDownGridX; n<=mouseDownGridX+1; n++){
+    		for(int m=mouseDownGridY-1; m<=mouseDownGridY+1; m++){
+    			if(!(n==mouseDownGridX && m==mouseDownGridY))
+    				if(booleanArray[n][m])
+    					count++;
+    		}
+    	}
+    }
+    else if(mouseDownGridX==0 && mouseDownGridY==TOTAL_ROWS-1){
+    	//Lower Left corner
+    	for(int n=mouseDownGridX; n<=mouseDownGridX+1; n++){
+    		for(int m=mouseDownGridY-1; m<=mouseDownGridY; m++){
+    			if(!(n==mouseDownGridX && m==mouseDownGridY))
+    				if(booleanArray[n][m])
+    					count++;
+    		}
+    	}
+    }
+    else if(mouseDownGridY==TOTAL_ROWS-1 && (mouseDownGridX>0 && mouseDownGridX<TOTAL_COLUMNS-1)){
+    	//Lower wall
+    	for(int n=mouseDownGridX-1; n<=mouseDownGridX+1;n++){
+    		for(int m=mouseDownGridY-1; m<=mouseDownGridY; m++){
+    			if(!(n==mouseDownGridX && m==mouseDownGridY))
+    				if(booleanArray[n][m])
+    					count++;
+    		}
+    	}
+    }
+    else if(mouseDownGridX==TOTAL_COLUMNS -1 && mouseDownGridY==TOTAL_ROWS -1){
+    	//Lower Right corner
+    	for(int n=mouseDownGridX-1; n<=mouseDownGridX; n++){
+    		for(int m=mouseDownGridY-1; m<=mouseDownGridY; m++){
+    			if(!(n==mouseDownGridX && m==mouseDownGridY))
+    				if(booleanArray[n][m])
+    					count++;
+    		}
+    	}
+    }
+    else if(mouseDownGridX == TOTAL_COLUMNS -1 && (mouseDownGridY>0 && mouseDownGridY<TOTAL_ROWS-1)){
+    	//Right wall
+    	for(int n=mouseDownGridX-1; n<=mouseDownGridX; n++){
+    		for(int m=mouseDownGridY-1; m<=mouseDownGridY+1; m++){
+    			if(!(n==mouseDownGridX && m==mouseDownGridY)){
+    				if(booleanArray[n][m])
+    					count++;
+    			}
+    		}
+    	}
+    }
+    else if(mouseDownGridX == TOTAL_COLUMNS -1 && mouseDownGridY == 0){
+    	//Upper Right corner
+    	for(int n=mouseDownGridX-1; n<=mouseDownGridX; n++){
+    		for(int m=mouseDownGridY; m<=mouseDownGridY+1; m++){
+    			if(!(n==mouseDownGridX && m==mouseDownGridY))
+    				if(booleanArray[n][m])
+    					count++;
+    		}
+    	}
+    }
+    else if(mouseDownGridY==0 && (mouseDownGridX>0 && mouseDownGridX<TOTAL_COLUMNS-1)){
+    	//Upper wall
+    	for(int n=mouseDownGridX-1; n<=mouseDownGridX+1; n++){
+    		for(int m=mouseDownGridY; m<=mouseDownGridY+1; m++){
+    			if(!(n==mouseDownGridX && m==mouseDownGridY))
+    				if(booleanArray[n][m])
+    					count++;
+    		}
+    	}
+    }
+    else{
+    	//Anywhere that's not the border
+    	for(int n=mouseDownGridX-1; n<=mouseDownGridX+1; n++){
+    		for(int m=mouseDownGridY-1; m<=mouseDownGridY+1; m++){
+    			if(!(n==mouseDownGridX && m==mouseDownGridY))
+    				if(booleanArray[n][m])
+    					count++;
+    		}
+    	}
+    }
+    //Debugging purposes.
+    System.out.println(count);
+    
+    return count;
+    }
+    
+    public void clearBlocks(){
+    Color uncovered = Color.LIGHT_GRAY;
+    
+ //  if(mouseDownGridX == 0 )
+  }
 }
