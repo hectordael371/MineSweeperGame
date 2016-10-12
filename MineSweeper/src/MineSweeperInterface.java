@@ -19,6 +19,7 @@ public class MineSweeperInterface extends JPanel {
     public int mouseDownGridY = 0;
     public Color[][] colorArray = new Color[TOTAL_COLUMNS][TOTAL_ROWS];
     public boolean[][] booleanArray = new boolean[TOTAL_COLUMNS][TOTAL_ROWS];
+    public int[][] numbersArray = new int[TOTAL_COLUMNS][TOTAL_ROWS];
     
     public MineSweeperInterface() {   //This is the constructor... this code runs first to initialize
         if (INNER_CELL_SIZE + (new Random()).nextInt(1) < 1) {    //Use of "random" to prevent unwanted Eclipse warning
@@ -50,19 +51,18 @@ public class MineSweeperInterface extends JPanel {
         int height = y2 - y1;
 
         //Paint the background
-        g.setColor(Color.BLUE);
+        g.setColor(Color.WHITE);
         g.fillRect(x1, y1, width + 1, height + 1);
 
         //By default, the grid will be 9x9 (see above: TOTAL_COLUMNS and TOTAL_ROWS) 
         g.setColor(Color.BLACK);
+        
         for (int y = 0; y <= TOTAL_ROWS ; y++) {
             g.drawLine(x1 + GRID_X, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)), x1 + GRID_X + ((INNER_CELL_SIZE + 1) * TOTAL_COLUMNS), y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)));
         }
         for (int x = 0; x <= TOTAL_COLUMNS; x++) {
             g.drawLine(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)), y1 + GRID_Y, x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)), y1 + GRID_Y + ((INNER_CELL_SIZE + 1) * (TOTAL_ROWS )));
         }
-
-      
         //Paint cell colors
         for (int x = 0; x < TOTAL_COLUMNS; x++) {
             for (int y = 0; y < TOTAL_ROWS; y++) {
@@ -72,6 +72,7 @@ public class MineSweeperInterface extends JPanel {
             }
         }
     }
+    
     public int getGridX(int x, int y) {
         Insets myInsets = getInsets();
         int x1 = myInsets.left;
@@ -117,6 +118,7 @@ public class MineSweeperInterface extends JPanel {
         }
         return y;
     }
+    //generates bombs in random grids
     public void placeBombs(){
     	Random r = new Random();
     	int numBombs = 10;
@@ -141,6 +143,7 @@ public class MineSweeperInterface extends JPanel {
     		booleanArray[n][m] = true;
     	}
     }
+    
     public int searchBombs(){
     int count = 0;
     if(mouseDownGridX==0 && mouseDownGridY ==0){
