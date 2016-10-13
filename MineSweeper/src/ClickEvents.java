@@ -122,18 +122,14 @@ public class ClickEvents extends MouseAdapter {
 						//Released the mouse button on the same cell where it was pressed
 						if(msPanel.booleanArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY]){
 							//Clicks a bomb
-							for(int n=0; n<msPanel.TOTAL_COLUMNS; n++){
-								for(int m=0; m<msPanel.TOTAL_ROWS; m++){
-									if(msPanel.booleanArray[n][m])
-										msPanel.colorArray[n][m] = Color.BLACK;
-								}
-							}
+							msPanel.gameLost = true;
 							msPanel.repaint();
 						 }
 						else{
 							if(msPanel.searchBombs() == 0){
 								//Clear adjacent blocks
-								msPanel.clearBlocks(); 
+								//msPanel.clearAdjacentBlocks();
+								msPanel.colorArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY] = Color.LIGHT_GRAY;
 							}
 							else{
 								msPanel.colorArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY] = Color.LIGHT_GRAY;
@@ -220,6 +216,7 @@ public class ClickEvents extends MouseAdapter {
 				//Had pressed outside
 				//Resets the game.
 				counter = 0;
+				msPanel.gameLost = false;
 				for(int n=0; n<msPanel.TOTAL_COLUMNS; n++){
 					for(int m=0; m<msPanel.TOTAL_ROWS; m++){
 						msPanel.colorArray[n][m] = Color.GRAY;

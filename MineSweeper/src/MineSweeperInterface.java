@@ -17,6 +17,7 @@ public class MineSweeperInterface extends JPanel {
     public int y = -1;
     public int mouseDownGridX = 0;
     public int mouseDownGridY = 0;
+    public boolean gameLost = false;
     public Color[][] colorArray = new Color[TOTAL_COLUMNS][TOTAL_ROWS];
     public boolean[][] booleanArray = new boolean[TOTAL_COLUMNS][TOTAL_ROWS];
     
@@ -65,11 +66,41 @@ public class MineSweeperInterface extends JPanel {
       
         //Paint cell colors
         for (int x = 0; x < TOTAL_COLUMNS; x++) {
-            for (int y = 0; y < TOTAL_ROWS; y++) {
-            	Color c = colorArray[x][y];
-                g.setColor(c);
-                g.fillRect(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 1, INNER_CELL_SIZE, INNER_CELL_SIZE);               
-            }
+        	for (int y = 0; y < TOTAL_ROWS; y++) {
+        		Color c = null;
+        		if(gameLost && booleanArray[x][y]){
+        			c = Color.RED;
+        			g.setColor(c);
+        			g.fillRect(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 1, INNER_CELL_SIZE, INNER_CELL_SIZE);               
+
+        		}
+        		else{
+        			c = colorArray[x][y];        		
+        			g.setColor(c);
+        			g.fillRect(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 1, INNER_CELL_SIZE, INNER_CELL_SIZE);               
+        		}
+        	}
+        }
+        
+        if(gameLost){
+			for(int n=0; n<TOTAL_COLUMNS; n++){
+				for(int m=0; m<TOTAL_ROWS; m++){
+					if(booleanArray[n][m]){
+						//Draw all the bombs.
+				    	Color c = Color.BLACK;
+				        g.setColor(c);
+				       //Draw body
+				        g.fillOval(x1 + GRID_X + (n * (INNER_CELL_SIZE + 1)) + 8, y1 + GRID_Y + (m * (INNER_CELL_SIZE + 1)) + 8, (INNER_CELL_SIZE+1)/2, (INNER_CELL_SIZE+1)/2);
+				       //Draw diagonal lines
+				        g.drawLine(x1 + GRID_X + (n * (INNER_CELL_SIZE + 1)) + 8, y1 + GRID_Y + (m * (INNER_CELL_SIZE + 1)) + 8, x1 + GRID_X + (n * (INNER_CELL_SIZE + 1)) + 23, y1 + GRID_Y + (m * (INNER_CELL_SIZE + 1)) + 23);
+				        g.drawLine(x1 + GRID_X + (n * (INNER_CELL_SIZE + 1)) + 8, y1 + GRID_Y + (m * (INNER_CELL_SIZE + 1)) + 23, x1 + GRID_X + (n * (INNER_CELL_SIZE + 1)) + 23, y1 + GRID_Y + (m * (INNER_CELL_SIZE + 1)) + 8);
+				       //Draw horizontal line.
+				        g.drawLine(x1 + GRID_X + (n * (INNER_CELL_SIZE + 1)) + 16, y1 + GRID_Y + (m * (INNER_CELL_SIZE + 1)) + 4, x1 + GRID_X + (n * (INNER_CELL_SIZE + 1)) + 16, y1 + GRID_Y + (m * (INNER_CELL_SIZE + 1)) + 27);
+				       //Draw vertical line. 
+				        g.drawLine(x1 + GRID_X + (n * (INNER_CELL_SIZE + 1)) + 4, y1 + GRID_Y + (m * (INNER_CELL_SIZE + 1)) + 15, x1 + GRID_X + (n * (INNER_CELL_SIZE + 1)) + 27, y1 + GRID_Y + (m * (INNER_CELL_SIZE + 1)) + 15);
+					}
+				}
+			}
         }
     }
     public int getGridX(int x, int y) {
@@ -236,13 +267,83 @@ public class MineSweeperInterface extends JPanel {
     }
     //Debugging purposes.
     System.out.println(count);
-    
     return count;
     }
     
     public void clearBlocks(){
     Color uncovered = Color.LIGHT_GRAY;
-    
- //  if(mouseDownGridX == 0 )
-  }
+    if(mouseDownGridX == 0 && mouseDownGridY == 0){
+    	for(int i=mouseDownGridX; i<=mouseDownGridX+1; i++){
+    		for(int j=mouseDownGridY; j<=mouseDownGridY+1; j++){
+    			colorArray[i][j] = uncovered;
+    			}
+    		}
+    	}
+    else if(mouseDownGridX == 0 && mouseDownGridY == TOTAL_ROWS-1){
+    	for(int i=mouseDownGridX; i<=mouseDownGridX+1; i++){
+    		for(int j=mouseDownGridY-1; j<=mouseDownGridY; j++){
+    			colorArray[i][j] = uncovered;
+    		}
+    	}
+    }
+    else if(mouseDownGridX == TOTAL_COLUMNS-1 && mouseDownGridY == TOTAL_ROWS -1){
+    	for(int i=mouseDownGridX-1; i<=mouseDownGridX; i++){
+    		for(int j=mouseDownGridY-1; j<=mouseDownGridY; j++){
+    			colorArray[i][j] = uncovered;
+    		}
+    	}
+    }
+    else if(mouseDownGridX == TOTAL_COLUMNS-1 && mouseDownGridY == 0){
+    	for(int i=mouseDownGridX-1; i<= mouseDownGridX; i++){
+    		for(int j=mouseDownGridY; j<=mouseDownGridY+1; j++){
+    			colorArray[i][j] = uncovered;
+    		}
+    	}
+    }
+    else if(mouseDownGridX == 0 && (mouseDownGridY>0 && mouseDownGridY<TOTAL_ROWS-1)){
+    	for(int i=mouseDownGridX; i<=mouseDownGridX+1; i++){
+    		for(int j=mouseDownGridY-1; j<=mouseDownGridY+1; j++){
+    			colorArray[i][j] = uncovered;
+    		}
+    	}
+    }
+    else if(mouseDownGridY == TOTAL_COLUMNS-1 && (mouseDownGridX>0 && mouseDownGridX<TOTAL_COLUMNS-1)){
+    	for(int i=mouseDownGridX-1; i<=mouseDownGridX+1; i++){
+    		for(int j=mouseDownGridY-1; j<=mouseDownGridY; j++){
+    			colorArray[i][j] = uncovered;
+    		}
+    	}
+    }
+    else if(mouseDownGridX == TOTAL_COLUMNS-1 && (mouseDownGridY>0 && mouseDownGridY<TOTAL_ROWS-1)){
+    	for(int i=mouseDownGridX-1; i<=mouseDownGridX; i++){
+    		for(int j=mouseDownGridY-1; j<=mouseDownGridY+1; j++){
+    			colorArray[i][j] = uncovered;
+    		}
+    	}
+    }
+    else if(mouseDownGridY == 0 && (mouseDownGridX>0 && mouseDownGridX <TOTAL_COLUMNS-1)){
+    	for(int i=mouseDownGridX-1; i<=mouseDownGridX+1; i++){
+    		for(int j=mouseDownGridY; j<=mouseDownGridY+1; j++){
+    			colorArray[i][j] = uncovered;
+    		}
+    	}
+    }
+    else{
+    	for(int i=mouseDownGridX-1; i<=mouseDownGridX+1; i++){
+    		for(int j=mouseDownGridY-1; j<=mouseDownGridY+1; j++){
+    			colorArray[i][j] = uncovered;
+    		}
+    	}
+    }
+    }
+    public void clearAdjacentBlocks(){
+    	for(int i=mouseDownGridX-1; i<=mouseDownGridX+1; i++){
+    		for(int j=mouseDownGridY-1; j<=mouseDownGridY+1; j++){
+    			if(!(booleanArray[i][j])){
+    				clearBlocks();
+    			}
+    		}
+    	}
+    }
+
 }
