@@ -3,77 +3,21 @@ import java.awt.Component;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import javax.swing.JFrame;
 
 public class ClickEvents extends MouseAdapter {
-	int counter = 0;
+	
     public void mousePressed(MouseEvent e) {
         switch (e.getButton()) {
         case 1:        //Left mouse button
-			Component c = e.getComponent();
-			while (!(c instanceof JFrame)) {
-				c = c.getParent();
-				if (c == null) {
-					return;
-				}
-			}
-			JFrame myFrame = (JFrame) c;
-			MineSweeperInterface msPanel = (MineSweeperInterface) myFrame.getContentPane().getComponent(0);
-			Insets myInsets = myFrame.getInsets();
-			int x1 = myInsets.left;
-			int y1 = myInsets.top;
-			e.translatePoint(-x1, -y1);
-			int x = e.getX();
-			int y = e.getY();
-			msPanel.x = x;
-			msPanel.y = y;
-			msPanel.mouseDownGridX = msPanel.getGridX(x, y);
-			msPanel.mouseDownGridY = msPanel.getGridY(x, y);
-			msPanel.repaint();
+			settings(e);
             break;
         case 3:        //Right mouse button
-			c = e.getComponent();
-			while (!(c instanceof JFrame)) {
-				c = c.getParent();
-				if (c == null) {
-					return;
-				}
-			}
-			myFrame = (JFrame) c;
-			msPanel = (MineSweeperInterface) myFrame.getContentPane().getComponent(0);
-			myInsets = myFrame.getInsets();
-			x1 = myInsets.left;
-			y1 = myInsets.top;
-			e.translatePoint(-x1, -y1);
-			x = e.getX();
-			y = e.getY();
-			msPanel.x = x;
-			msPanel.y = y;
-			msPanel.mouseDownGridX = msPanel.getGridX(x, y);
-			msPanel.mouseDownGridY = msPanel.getGridY(x, y);
-			msPanel.repaint();
+        	settings(e);
             break;
         default:    //Some other button (2 = Middle mouse button, etc.)
-        	c = e.getComponent();
-			while (!(c instanceof JFrame)) {
-				c = c.getParent();
-				if (c == null) {
-					return;
-				}
-			}
-			myFrame = (JFrame) c;
-			msPanel = (MineSweeperInterface) myFrame.getContentPane().getComponent(0);
-			myInsets = myFrame.getInsets();
-			x1 = myInsets.left;
-			y1 = myInsets.top;
-			e.translatePoint(-x1, -y1);
-			x = e.getX();
-			y = e.getY();
-			msPanel.x = x;
-			msPanel.y = y;
-			msPanel.mouseDownGridX = msPanel.getGridX(x, y);
-			msPanel.mouseDownGridY = msPanel.getGridY(x, y);
-			msPanel.repaint();
+        	settings(e);
             break;
         }
     }
@@ -87,23 +31,17 @@ public class ClickEvents extends MouseAdapter {
 					return;
 				}
 			}
-			JFrame myFrame = (JFrame)c;
-			MineSweeperInterface msPanel = (MineSweeperInterface) myFrame.getContentPane().getComponent(0);  //Can also loop among components to find MyPanel
-			Insets myInsets = myFrame.getInsets();
-			int x1 = myInsets.left;
-			int y1 = myInsets.top;
-			e.translatePoint(-x1, -y1);
-			int x = e.getX();
-			int y = e.getY();
-			msPanel.x = x;
-			msPanel.y = y;
-			int gridX = msPanel.getGridX(x, y);
-			int gridY = msPanel.getGridY(x, y);
-			if(counter == 0){
-				msPanel.placeBombs();
-				counter++;
+	
+			MineSweeperInterface msPanel = settings(e);
+			int gridX = msPanel.getGridX(e.getX(), e.getY());
+			int gridY = msPanel.getGridY(e.getX(), e.getY());
 			
-			}
+			//places bombs in random grids
+			msPanel.placeBombs();
+			
+			//places counters in the grids that are nearby bombs
+			msPanel.searchBombs();
+			
 			if ((msPanel.mouseDownGridX == -1) || (msPanel.mouseDownGridY == -1)) {
 				//Had pressed outside
 				//Do nothing
@@ -120,6 +58,7 @@ public class ClickEvents extends MouseAdapter {
 					}
 					else {
 						//Released the mouse button on the same cell where it was pressed
+						
 						if(msPanel.booleanArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY]){
 							//Clicks a bomb
 							for(int n=0; n<msPanel.TOTAL_COLUMNS; n++){
@@ -131,13 +70,14 @@ public class ClickEvents extends MouseAdapter {
 							msPanel.repaint();
 						 }
 						else{
-							if(msPanel.searchBombs() == 0){
+							
+							
+							if(false){
 								//Clear adjacent blocks
-								msPanel.clearBlocks(); 
 							}
 							else{
 								msPanel.colorArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY] = Color.LIGHT_GRAY;
-
+								System.out.println(msPanel.numbersArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY]);
 							}
 							
 							msPanel.repaint();
@@ -147,25 +87,10 @@ public class ClickEvents extends MouseAdapter {
 				}
             break;
         case 3:        //Right mouse button
-			c = e.getComponent();
-			while (!(c instanceof JFrame)) {
-				c = c.getParent();
-				if (c == null) {
-					return;
-				}
-			}
-			myFrame = (JFrame)c;
-			msPanel = (MineSweeperInterface) myFrame.getContentPane().getComponent(0);  //Can also loop among components to find MyPanel
-			myInsets = myFrame.getInsets();
-			x1 = myInsets.left;
-			y1 = myInsets.top;
-			e.translatePoint(-x1, -y1);
-			x = e.getX();
-			y = e.getY();
-			msPanel.x = x;
-			msPanel.y = y;
-			gridX = msPanel.getGridX(x, y);
-			gridY = msPanel.getGridY(x, y);
+        	 msPanel = settings(e);
+			 gridX = msPanel.getGridX(e.getX(), e.getY());
+			 gridY = msPanel.getGridY(e.getX(), e.getY());
+			
 			if ((msPanel.mouseDownGridX == -1) || (msPanel.mouseDownGridY == -1)) {
 				//Had pressed outside
 				//Do nothing
@@ -197,29 +122,16 @@ public class ClickEvents extends MouseAdapter {
 			}
 			break;
         default:    //Some other button (2 = Middle mouse button, etc.)
-			c = e.getComponent();
-			while (!(c instanceof JFrame)) {
-				c = c.getParent();
-				if (c == null) {
-					return;
-				}
-			}
-			myFrame = (JFrame)c;
-			msPanel = (MineSweeperInterface) myFrame.getContentPane().getComponent(0);  //Can also loop among components to find MyPanel
-			myInsets = myFrame.getInsets();
-			x1 = myInsets.left;
-			y1 = myInsets.top;
-			e.translatePoint(-x1, -y1);
-			x = e.getX();
-			y = e.getY();
-			msPanel.x = x;
-			msPanel.y = y;
-			gridX = msPanel.getGridX(x, y);
-			gridY = msPanel.getGridY(x, y);
+        	
+        	msPanel = settings(e);
+			gridX = msPanel.getGridX(e.getX(), e.getY());
+			gridY = msPanel.getGridY(e.getX(), e.getY());
+			
+			
 			if ((msPanel.mouseDownGridX == -1) || (msPanel.mouseDownGridY == -1)) {
 				//Had pressed outside
 				//Resets the game.
-				counter = 0;
+			
 				for(int n=0; n<msPanel.TOTAL_COLUMNS; n++){
 					for(int m=0; m<msPanel.TOTAL_ROWS; m++){
 						msPanel.colorArray[n][m] = Color.GRAY;
@@ -229,4 +141,29 @@ public class ClickEvents extends MouseAdapter {
             break;
     }
   }
+    
+    public MineSweeperInterface settings(MouseEvent e){
+    	Component c = e.getComponent();
+		while (!(c instanceof JFrame)) {
+			c = c.getParent();
+			if (c == null) {
+				return null;
+			}
+		}
+		JFrame myFrame = (JFrame) c;
+		MineSweeperInterface msPanel = (MineSweeperInterface) myFrame.getContentPane().getComponent(0);
+		Insets myInsets = myFrame.getInsets();
+		int x1 = myInsets.left;
+		int y1 = myInsets.top;
+		e.translatePoint(-x1, -y1);
+		int x = e.getX();
+		int y = e.getY();
+		msPanel.x = x;
+		msPanel.y = y;
+		msPanel.mouseDownGridX = msPanel.getGridX(x, y);
+		msPanel.mouseDownGridY = msPanel.getGridY(x, y);
+		msPanel.repaint();
+		
+		return msPanel;
+    }
 }

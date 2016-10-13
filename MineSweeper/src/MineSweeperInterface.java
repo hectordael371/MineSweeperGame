@@ -37,7 +37,10 @@ public class MineSweeperInterface extends JPanel {
                 colorArray[x][y] = Color.GRAY;
             }
         }
+        
+       
     }
+ 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
@@ -67,6 +70,7 @@ public class MineSweeperInterface extends JPanel {
         for (int x = 0; x < TOTAL_COLUMNS; x++) {
             for (int y = 0; y < TOTAL_ROWS; y++) {
             	Color c = colorArray[x][y];
+            	numbersArray[x][y] = 0;
                 g.setColor(c);
                 g.fillRect(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 1, INNER_CELL_SIZE, INNER_CELL_SIZE);               
             }
@@ -129,11 +133,11 @@ public class MineSweeperInterface extends JPanel {
                 booleanArray[n][m] = false;
 			}
 		}  	
-    	for(int i=0; i<numBombs; i++){
+    	for(int i=0; i<numBombs-1; i++){
     		
     		int n = r.nextInt(TOTAL_COLUMNS);
     		int m = r.nextInt(TOTAL_ROWS);
-    		
+    		booleanArray[0][0] = true;
     		while(booleanArray[n][m] || (n == mouseDownGridX && m == mouseDownGridY)){ 
     			//This is to avoid setting a random bomb on top of another random bomb or on the clicked grid.
     			n = r.nextInt(TOTAL_COLUMNS);
@@ -144,108 +148,51 @@ public class MineSweeperInterface extends JPanel {
     	}
     }
     
-    public int searchBombs(){
-    int count = 0;
-    if(mouseDownGridX==0 && mouseDownGridY ==0){
-    	//Bottom Top corner
-    	for(int n=mouseDownGridX; n<=mouseDownGridX+1; n++){
-    		for(int m=mouseDownGridY; m<=mouseDownGridY+1;m++){
-    			if(!(n==mouseDownGridX && m==mouseDownGridY))
-    				if(booleanArray[n][m])
-    					count++;
-    		}
-    	}
-    }
-    else if(mouseDownGridX==0 && (mouseDownGridY>0 && mouseDownGridY<TOTAL_ROWS-1)){
-    	//Left wall
-    	for(int n=mouseDownGridX; n<=mouseDownGridX+1; n++){
-    		for(int m=mouseDownGridY-1; m<=mouseDownGridY+1; m++){
-    			if(!(n==mouseDownGridX && m==mouseDownGridY))
-    				if(booleanArray[n][m])
-    					count++;
-    		}
-    	}
-    }
-    else if(mouseDownGridX==0 && mouseDownGridY==TOTAL_ROWS-1){
-    	//Lower Left corner
-    	for(int n=mouseDownGridX; n<=mouseDownGridX+1; n++){
-    		for(int m=mouseDownGridY-1; m<=mouseDownGridY; m++){
-    			if(!(n==mouseDownGridX && m==mouseDownGridY))
-    				if(booleanArray[n][m])
-    					count++;
-    		}
-    	}
-    }
-    else if(mouseDownGridY==TOTAL_ROWS-1 && (mouseDownGridX>0 && mouseDownGridX<TOTAL_COLUMNS-1)){
-    	//Lower wall
-    	for(int n=mouseDownGridX-1; n<=mouseDownGridX+1;n++){
-    		for(int m=mouseDownGridY-1; m<=mouseDownGridY; m++){
-    			if(!(n==mouseDownGridX && m==mouseDownGridY))
-    				if(booleanArray[n][m])
-    					count++;
-    		}
-    	}
-    }
-    else if(mouseDownGridX==TOTAL_COLUMNS -1 && mouseDownGridY==TOTAL_ROWS -1){
-    	//Lower Right corner
-    	for(int n=mouseDownGridX-1; n<=mouseDownGridX; n++){
-    		for(int m=mouseDownGridY-1; m<=mouseDownGridY; m++){
-    			if(!(n==mouseDownGridX && m==mouseDownGridY))
-    				if(booleanArray[n][m])
-    					count++;
-    		}
-    	}
-    }
-    else if(mouseDownGridX == TOTAL_COLUMNS -1 && (mouseDownGridY>0 && mouseDownGridY<TOTAL_ROWS-1)){
-    	//Right wall
-    	for(int n=mouseDownGridX-1; n<=mouseDownGridX; n++){
-    		for(int m=mouseDownGridY-1; m<=mouseDownGridY+1; m++){
-    			if(!(n==mouseDownGridX && m==mouseDownGridY)){
-    				if(booleanArray[n][m])
-    					count++;
+    public void searchBombs(){
+    	
+    for(int row=0; row < TOTAL_ROWS-1; row++){
+    	for(int col=0; col < TOTAL_COLUMNS -1; col++){
+    		if(booleanArray[row][col]){
+    			//if there is a bomb in the mine location then add counter to the nearby mines
+    			
+    			
+    			if(row == 0 && col == 0){
+    				numbersArray[row][col+1] += 1;
+    				numbersArray[row+1][col] += 1;
+        			numbersArray[row+1][col+1] += 1;
     			}
+    			//continue here
+    			
+    			/*
+    			numbersArray[row-1][col-1] 	+= 1;
+    			numbersArray[row-1][col]	+= 1;
+    			numbersArray[row-1][col+1]	+= 1;
+    		
+    			numbersArray[row][col-1] += 1;
+    			numbersArray[row][col+1] += 1;
+    			
+    			numbersArray[row+1][col-1] += 1;
+    			numbersArray[row+1][col] += 1;
+    			numbersArray[row+1][col+1] += 1;
+    			*/
     		}
     	}
     }
-    else if(mouseDownGridX == TOTAL_COLUMNS -1 && mouseDownGridY == 0){
-    	//Upper Right corner
-    	for(int n=mouseDownGridX-1; n<=mouseDownGridX; n++){
-    		for(int m=mouseDownGridY; m<=mouseDownGridY+1; m++){
-    			if(!(n==mouseDownGridX && m==mouseDownGridY))
-    				if(booleanArray[n][m])
-    					count++;
-    		}
-    	}
-    }
-    else if(mouseDownGridY==0 && (mouseDownGridX>0 && mouseDownGridX<TOTAL_COLUMNS-1)){
-    	//Upper wall
-    	for(int n=mouseDownGridX-1; n<=mouseDownGridX+1; n++){
-    		for(int m=mouseDownGridY; m<=mouseDownGridY+1; m++){
-    			if(!(n==mouseDownGridX && m==mouseDownGridY))
-    				if(booleanArray[n][m])
-    					count++;
-    		}
-    	}
-    }
-    else{
-    	//Anywhere that's not the border
-    	for(int n=mouseDownGridX-1; n<=mouseDownGridX+1; n++){
-    		for(int m=mouseDownGridY-1; m<=mouseDownGridY+1; m++){
-    			if(!(n==mouseDownGridX && m==mouseDownGridY))
-    				if(booleanArray[n][m])
-    					count++;
-    		}
-    	}
-    }
+
     //Debugging purposes.
-    System.out.println(count);
+    
+    
+   
+    }
+    
+    public int clearBlocks(){
+    Color uncovered = Color.LIGHT_GRAY;
+    int count = 0;
+    
+   
     
     return count;
-    }
-    
-    public void clearBlocks(){
-    Color uncovered = Color.LIGHT_GRAY;
-    
- //  if(mouseDownGridX == 0 )
   }
+    
+    
 }
