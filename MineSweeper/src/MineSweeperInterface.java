@@ -38,6 +38,8 @@ public class MineSweeperInterface extends JPanel {
             }
         }
         
+        placeBombs();
+       
        
     }
  
@@ -133,11 +135,14 @@ public class MineSweeperInterface extends JPanel {
                 booleanArray[n][m] = false;
 			}
 		}  	
-    	for(int i=0; i<numBombs-1; i++){
+    	for(int i=0; i<numBombs-4; i++){
     		
     		int n = r.nextInt(TOTAL_COLUMNS);
     		int m = r.nextInt(TOTAL_ROWS);
     		booleanArray[0][0] = true;
+    		booleanArray[9][0] = true;
+    		booleanArray[0][9] = true;
+    		booleanArray[9][9] = true;
     		while(booleanArray[n][m] || (n == mouseDownGridX && m == mouseDownGridY)){ 
     			//This is to avoid setting a random bomb on top of another random bomb or on the clicked grid.
     			n = r.nextInt(TOTAL_COLUMNS);
@@ -150,18 +155,18 @@ public class MineSweeperInterface extends JPanel {
     
     public void searchBombs(){
     	
-    for(int row=0; row < TOTAL_ROWS-1; row++){
+    for(int row=0; row < TOTAL_ROWS -1; row++){
     	for(int col=0; col < TOTAL_COLUMNS -1; col++){
-    		if(booleanArray[row][col]){
+    		if(booleanArray[col][row]){
     			//if there is a bomb in the mine location then add counter to the nearby mines
     			
     			
     			if(row == 0 && col == 0){
-    				numbersArray[row][col+1] += 1;
-    				numbersArray[row+1][col] += 1;
-        			numbersArray[row+1][col+1] += 1;
+    				numbersArray[col][row+1] += 1;
+    				numbersArray[col+1][row] += 1;
+        			numbersArray[col+1][row+1] += 1;
     			}
-    			//continue here
+    			
     			
     			/*
     			numbersArray[row-1][col-1] 	+= 1;
@@ -175,6 +180,7 @@ public class MineSweeperInterface extends JPanel {
     			numbersArray[row+1][col] += 1;
     			numbersArray[row+1][col+1] += 1;
     			*/
+    			
     		}
     	}
     }
