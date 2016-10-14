@@ -131,9 +131,9 @@ public class ClickEvents extends MouseAdapter {
 						else{
 							msPanel.searchBombs();
 							
-							if(msPanel.counterArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY] == 0){
-								//Clear adjacent blocks
-								msPanel.clearBlocks(); 
+							if(msPanel.counterArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY] == 0){						
+								msPanel.clearBlocks(msPanel.mouseDownGridX, msPanel.mouseDownGridY); 
+								
 							}
 							else{
 								msPanel.colorArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY] = Color.LIGHT_GRAY;

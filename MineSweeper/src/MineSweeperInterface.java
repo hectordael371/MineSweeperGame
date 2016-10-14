@@ -231,14 +231,14 @@ public class MineSweeperInterface extends JPanel {
    
     }
     
-    public void clearBlocks(){
+    public void clearBlocks(int col, int row){
     Color uncovered = Color.LIGHT_GRAY;
     
-    for(int i = 0 ; i < 10; i ++){
-    	
-    	
-    }
-   
+    int startX = col;
+    int startY = row;
+
+    
+        
     
   }
     
