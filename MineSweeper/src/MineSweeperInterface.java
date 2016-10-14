@@ -71,20 +71,26 @@ public class MineSweeperInterface extends JPanel {
         for (int x = 0; x < TOTAL_COLUMNS; x++) {
         	for (int y = 0; y < TOTAL_ROWS; y++) {
         		if(gameLost && bombArray[x][y]){
+        			//Game ends.
         			g.setColor(Color.RED);
         			g.fillRect(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 1, INNER_CELL_SIZE, INNER_CELL_SIZE);               
 
         		}
         		else {
+        			//Paint the cells.
         			Color c = colorArray[x][y];        		
         			g.setColor(c);
         			g.fillRect(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 1, INNER_CELL_SIZE, INNER_CELL_SIZE);
+        			
         			if(colorArray[x][y].equals(Color.LIGHT_GRAY) && numberArray[x][y] != 0){
+        				//If cell is uncovered and there is a bomb surrounding it.
         				String numbers = String.valueOf(numberArray[x][y]); 
         				g.setColor(Color.BLACK);
         				g.drawString(numbers, x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 11, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 18);
         			}	
         			if(flagArray[x][y] && !(colorArray[x][y].equals(Color.LIGHT_GRAY))){
+        				//User flags the cell.
+        				
         				//Flag's pole
         				g.setColor(Color.WHITE);
         				g.drawLine(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 7, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 7, x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 7, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 23);
@@ -99,10 +105,10 @@ public class MineSweeperInterface extends JPanel {
         			}
         		}        
         if(gameLost){
+        	//Draw all the bombs if the player loses.
 			for(int n=0; n<TOTAL_COLUMNS; n++){
 				for(int m=0; m<TOTAL_ROWS; m++){
 					if(bombArray[n][m]){
-						//Draw all the bombs.
 				    	Color c = Color.BLACK;
 				        g.setColor(c);
 				       //Draw body
@@ -189,84 +195,92 @@ public class MineSweeperInterface extends JPanel {
     		bombArray[n][m] = true;
     	}
     }
-    public int searchBombs(){
+    public int searchBombs(int xPos, int yPos){
     int count = 0;
-    if(mouseDownGridX==0 && mouseDownGridY ==0){
+    if(xPos==0 && yPos ==0){
     	//Bottom Top corner
-    	for(int n=mouseDownGridX; n<=mouseDownGridX+1; n++){
-    		for(int m=mouseDownGridY; m<=mouseDownGridY+1;m++){
-    			if(!(n==mouseDownGridX && m==mouseDownGridY))
+    	for(int n=xPos; n<=xPos+1; n++){
+    		for(int m=yPos; m<=yPos+1;m++){
+    			if(!(n==xPos && m==yPos))
+    				//Clicked grid is not evaluated.
     				if(bombArray[n][m])
     					count++;
     		}
     	}
     }
-    else if(mouseDownGridX==0 && (mouseDownGridY>0 && mouseDownGridY<TOTAL_ROWS-1)){
+    else if(xPos==0 && (yPos>0 && yPos<TOTAL_ROWS-1)){
     	//Left wall
-    	for(int n=mouseDownGridX; n<=mouseDownGridX+1; n++){
-    		for(int m=mouseDownGridY-1; m<=mouseDownGridY+1; m++){
-    			if(!(n==mouseDownGridX && m==mouseDownGridY))
+    	for(int n=xPos; n<=xPos+1; n++){
+    		for(int m=yPos-1; m<=yPos+1; m++){
+    			if(!(n==xPos && m==yPos))
+    				//Clicked grid is not evaluated.
     				if(bombArray[n][m])
     					count++;
     		}
     	}
     }
-    else if(mouseDownGridX==0 && mouseDownGridY==TOTAL_ROWS-1){
+    else if(xPos==0 && yPos==TOTAL_ROWS-1){
     	//Lower Left corner
-    	for(int n=mouseDownGridX; n<=mouseDownGridX+1; n++){
-    		for(int m=mouseDownGridY-1; m<=mouseDownGridY; m++){
-    			if(!(n==mouseDownGridX && m==mouseDownGridY))
+    	for(int n=xPos; n<=xPos+1; n++){
+    		for(int m=yPos-1; m<=yPos; m++){
+    			if(!(n==xPos && m==yPos))
+    				//Clicked grid is not evaluated.
     				if(bombArray[n][m])
     					count++;
     		}
     	}
     }
-    else if(mouseDownGridY==TOTAL_ROWS-1 && (mouseDownGridX>0 && mouseDownGridX<TOTAL_COLUMNS-1)){
+    else if(yPos==TOTAL_ROWS-1 && (xPos>0 && xPos<TOTAL_COLUMNS-1)){
     	//Lower wall
-    	for(int n=mouseDownGridX-1; n<=mouseDownGridX+1;n++){
-    		for(int m=mouseDownGridY-1; m<=mouseDownGridY; m++){
-    			if(!(n==mouseDownGridX && m==mouseDownGridY))
+    	for(int n=xPos-1; n<=xPos+1;n++){
+    		for(int m=yPos-1; m<=yPos; m++){
+    			if(!(n==xPos && m==yPos))
+    				//Clicked grid is not evaluated.
     				if(bombArray[n][m])
     					count++;
     		}
     	}
     }
-    else if(mouseDownGridX==TOTAL_COLUMNS -1 && mouseDownGridY==TOTAL_ROWS -1){
+    else if(xPos==TOTAL_COLUMNS -1 && yPos==TOTAL_ROWS -1){
     	//Lower Right corner
-    	for(int n=mouseDownGridX-1; n<=mouseDownGridX; n++){
-    		for(int m=mouseDownGridY-1; m<=mouseDownGridY; m++){
-    			if(!(n==mouseDownGridX && m==mouseDownGridY))
+    	for(int n=xPos-1; n<=xPos; n++){
+    		for(int m=yPos-1; m<=yPos; m++){
+    			if(!(n==xPos && m==yPos))
+    				//Clicked grid is not evaluated.
     				if(bombArray[n][m])
     					count++;
     		}
     	}
     }
-    else if(mouseDownGridX == TOTAL_COLUMNS -1 && (mouseDownGridY>0 && mouseDownGridY<TOTAL_ROWS-1)){
+    else if(xPos == TOTAL_COLUMNS -1 && (yPos>0 && yPos<TOTAL_ROWS-1)){
     	//Right wall
-    	for(int n=mouseDownGridX-1; n<=mouseDownGridX; n++){
-    		for(int m=mouseDownGridY-1; m<=mouseDownGridY+1; m++){
-    			if(!(n==mouseDownGridX && m==mouseDownGridY)){
+    	for(int n=xPos-1; n<=xPos; n++){
+    		for(int m=yPos-1; m<=yPos+1; m++){
+    			if(!(n==xPos && m==yPos)){
+    				//Clicked grid is not evaluated.
     				if(bombArray[n][m])
     					count++;
     			}
     		}
     	}
     }
-    else if(mouseDownGridX == TOTAL_COLUMNS -1 && mouseDownGridY == 0){
+    else if(xPos == TOTAL_COLUMNS -1 && yPos == 0){
     	//Upper Right corner
-    	for(int n=mouseDownGridX-1; n<=mouseDownGridX; n++){
-    		for(int m=mouseDownGridY; m<=mouseDownGridY+1; m++){
-    			if(!(n==mouseDownGridX && m==mouseDownGridY))
+    	for(int n=xPos-1; n<=xPos; n++){
+    		for(int m=yPos; m<=yPos+1; m++){
+    			if(!(n==xPos && m==yPos))
+    				//Clicked grid is not evaluated.
     				if(bombArray[n][m])
     					count++;
     		}
     	}
     }
-    else if(mouseDownGridY==0 && (mouseDownGridX>0 && mouseDownGridX<TOTAL_COLUMNS-1)){
+    else if(yPos==0 && (xPos>0 && xPos<TOTAL_COLUMNS-1)){
     	//Upper wall
-    	for(int n=mouseDownGridX-1; n<=mouseDownGridX+1; n++){
-    		for(int m=mouseDownGridY; m<=mouseDownGridY+1; m++){
-    			if(!(n==mouseDownGridX && m==mouseDownGridY))
+    	for(int n=xPos-1; n<=xPos+1; n++){
+    		for(int m=yPos; m<=yPos+1; m++){
+    			if(!(n==xPos && m==yPos))
+    				//Clicked grid is not evaluated.
     				if(bombArray[n][m])
     					count++;
     		}
@@ -274,9 +288,10 @@ public class MineSweeperInterface extends JPanel {
     }
     else{
     	//Anywhere that's not the border
-    	for(int n=mouseDownGridX-1; n<=mouseDownGridX+1; n++){
-    		for(int m=mouseDownGridY-1; m<=mouseDownGridY+1; m++){
-    			if(!(n==mouseDownGridX && m==mouseDownGridY))
+    	for(int n=xPos-1; n<=xPos+1; n++){
+    		for(int m=yPos-1; m<=yPos+1; m++){
+    			if(!(n==xPos && m==yPos))
+    				//Clicked grid is not evaluated.
     				if(bombArray[n][m])
     					count++;
     		}
@@ -285,80 +300,89 @@ public class MineSweeperInterface extends JPanel {
     return count;
     }
     
-    public void clearBlocks(){
+    public void clearBlocks(int xPos, int yPos){
     Color uncovered = Color.LIGHT_GRAY;
-    if(mouseDownGridX == 0 && mouseDownGridY == 0){
-    	for(int i=mouseDownGridX; i<=mouseDownGridX+1; i++){
-    		for(int j=mouseDownGridY; j<=mouseDownGridY+1; j++){
+    if(xPos == 0 && yPos == 0){
+    	//Top-left corner.
+    	for(int i=xPos; i<=xPos+1; i++){
+    		for(int j=yPos; j<=yPos+1; j++){
     			colorArray[i][j] = uncovered;
+    			numberArray[i][j] = searchBombs(i,j);
     			}
     		}
     	}
-    else if(mouseDownGridX == 0 && mouseDownGridY == TOTAL_ROWS-1){
-    	for(int i=mouseDownGridX; i<=mouseDownGridX+1; i++){
-    		for(int j=mouseDownGridY-1; j<=mouseDownGridY; j++){
+    else if(xPos == 0 && yPos == TOTAL_ROWS-1){
+    	//Bottom-left corner.
+    	for(int i=xPos; i<=xPos+1; i++){
+    		for(int j=yPos-1; j<=yPos; j++){
     			colorArray[i][j] = uncovered;
-    		}
+    			numberArray[i][j] = searchBombs(i,j);
+    			}
     	}
     }
-    else if(mouseDownGridX == TOTAL_COLUMNS-1 && mouseDownGridY == TOTAL_ROWS -1){
-    	for(int i=mouseDownGridX-1; i<=mouseDownGridX; i++){
-    		for(int j=mouseDownGridY-1; j<=mouseDownGridY; j++){
+    else if(xPos == TOTAL_COLUMNS-1 && yPos == TOTAL_ROWS -1){
+    	//Bottom-right corner.
+    	for(int i=xPos-1; i<=xPos; i++){
+    		for(int j=yPos-1; j<=yPos; j++){
     			colorArray[i][j] = uncovered;
-    		}
+    			numberArray[i][j] = searchBombs(i,j);
+    			}
     	}
     }
-    else if(mouseDownGridX == TOTAL_COLUMNS-1 && mouseDownGridY == 0){
-    	for(int i=mouseDownGridX-1; i<= mouseDownGridX; i++){
-    		for(int j=mouseDownGridY; j<=mouseDownGridY+1; j++){
+    else if(xPos == TOTAL_COLUMNS-1 && yPos == 0){
+    	//Top-right corner.
+    	for(int i=xPos-1; i<= xPos; i++){
+    		for(int j=yPos; j<=yPos+1; j++){
     			colorArray[i][j] = uncovered;
-    		}
+    			numberArray[i][j] = searchBombs(i,j);
+    			}
     	}
     }
-    else if(mouseDownGridX == 0 && (mouseDownGridY>0 && mouseDownGridY<TOTAL_ROWS-1)){
-    	for(int i=mouseDownGridX; i<=mouseDownGridX+1; i++){
-    		for(int j=mouseDownGridY-1; j<=mouseDownGridY+1; j++){
+    else if(xPos == 0 && (yPos>0 && yPos<TOTAL_ROWS-1)){
+    	//Left border.
+    	for(int i=xPos; i<=xPos+1; i++){
+    		for(int j=yPos-1; j<=yPos+1; j++){
     			colorArray[i][j] = uncovered;
-    		}
+    			numberArray[i][j] = searchBombs(i,j);
+    			}
     	}
     }
-    else if(mouseDownGridY == TOTAL_COLUMNS-1 && (mouseDownGridX>0 && mouseDownGridX<TOTAL_COLUMNS-1)){
-    	for(int i=mouseDownGridX-1; i<=mouseDownGridX+1; i++){
-    		for(int j=mouseDownGridY-1; j<=mouseDownGridY; j++){
+    else if(yPos == TOTAL_COLUMNS-1 && (xPos>0 && xPos<TOTAL_COLUMNS-1)){
+    	//Bottom border.
+    	for(int i=xPos-1; i<=xPos+1; i++){
+    		for(int j=yPos-1; j<=yPos; j++){
     			colorArray[i][j] = uncovered;
-    		}
+    			numberArray[i][j] = searchBombs(i,j);
+    			}
     	}
     }
-    else if(mouseDownGridX == TOTAL_COLUMNS-1 && (mouseDownGridY>0 && mouseDownGridY<TOTAL_ROWS-1)){
-    	for(int i=mouseDownGridX-1; i<=mouseDownGridX; i++){
-    		for(int j=mouseDownGridY-1; j<=mouseDownGridY+1; j++){
+    else if(xPos == TOTAL_COLUMNS-1 && (yPos>0 && yPos<TOTAL_ROWS-1)){
+    	//Right border.
+    	for(int i=xPos-1; i<=xPos; i++){
+    		for(int j=yPos-1; j<=yPos+1; j++){
     			colorArray[i][j] = uncovered;
-    		}
+    			numberArray[i][j] = searchBombs(i,j);
+    			}
     	}
     }
-    else if(mouseDownGridY == 0 && (mouseDownGridX>0 && mouseDownGridX <TOTAL_COLUMNS-1)){
-    	for(int i=mouseDownGridX-1; i<=mouseDownGridX+1; i++){
-    		for(int j=mouseDownGridY; j<=mouseDownGridY+1; j++){
+    else if(yPos == 0 && (xPos>0 && xPos <TOTAL_COLUMNS-1)){
+    	//Upper border.
+    	for(int i=xPos-1; i<=xPos+1; i++){
+    		for(int j=yPos; j<=yPos+1; j++){
     			colorArray[i][j] = uncovered;
-    		}
+    			numberArray[i][j] = searchBombs(i,j);
+    			}
     	}
     }
     else{
-    	for(int i=mouseDownGridX-1; i<=mouseDownGridX+1; i++){
-    		for(int j=mouseDownGridY-1; j<=mouseDownGridY+1; j++){
+    	//Rest of the grid.
+    	for(int i=xPos-1; i<=xPos+1; i++){
+    		for(int j=yPos-1; j<=yPos+1; j++){
     			colorArray[i][j] = uncovered;
-    		}
-    	}
-    }
-    }
-    public void clearAdjacentBlocks(){
-    	for(int i=mouseDownGridX-1; i<=mouseDownGridX+1; i++){
-    		for(int j=mouseDownGridY-1; j<=mouseDownGridY+1; j++){
-    			if(!(bombArray[i][j])){
-    				clearBlocks();
+    			numberArray[i][j] = searchBombs(i,j);
     			}
-    		}
     	}
     }
-
+    repaint();
+    }
 }

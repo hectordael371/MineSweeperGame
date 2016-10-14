@@ -100,7 +100,7 @@ public class ClickEvents extends MouseAdapter {
 			int gridX = msPanel.getGridX(x, y);
 			int gridY = msPanel.getGridY(x, y);
 			if(counter == 0){
-				msPanel.placeBombs();
+			    msPanel.placeBombs();
 				counter++;
 			
 			}
@@ -125,17 +125,15 @@ public class ClickEvents extends MouseAdapter {
 						if(msPanel.bombArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY]){
 							//Clicks a bomb
 							msPanel.gameLost = true;
-							msPanel.repaint();
 						 }
 						else {
-							if(msPanel.searchBombs() == 0){
+							if(msPanel.searchBombs(msPanel.mouseDownGridX, msPanel.mouseDownGridY) == 0){
 								//Clear adjacent blocks
-								//msPanel.clearAdjacentBlocks();
-								msPanel.colorArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY] = Color.LIGHT_GRAY;
+								msPanel.clearBlocks(msPanel.mouseDownGridX, msPanel.mouseDownGridY);
 							}
 							else{
 								msPanel.colorArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY] = Color.LIGHT_GRAY;
-								msPanel.numberArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY] = msPanel.searchBombs();
+								msPanel.numberArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY] = msPanel.searchBombs(msPanel.mouseDownGridX, msPanel.mouseDownGridY);
 							}
 						}
 						msPanel.repaint();
