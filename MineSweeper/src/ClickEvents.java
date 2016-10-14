@@ -135,6 +135,7 @@ public class ClickEvents extends MouseAdapter {
 							}
 							else{
 								msPanel.colorArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY] = Color.LIGHT_GRAY;
+								msPanel.numberArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY] = msPanel.searchBombs();
 							}
 						}
 						msPanel.repaint();
@@ -222,8 +223,10 @@ public class ClickEvents extends MouseAdapter {
 					for(int m=0; m<msPanel.TOTAL_ROWS; m++){
 						msPanel.colorArray[n][m] = Color.GRAY;
 						msPanel.flagArray[n][m] = false;
+						msPanel.numberArray[n][m] = 0;
 					}
 				}
+				msPanel.repaint();
 			}
             break;
     }

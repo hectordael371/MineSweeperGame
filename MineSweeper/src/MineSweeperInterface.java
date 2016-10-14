@@ -3,7 +3,6 @@ import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Polygon;
 import java.util.Random;
-
 import javax.swing.JPanel;
 
 public class MineSweeperInterface extends JPanel {
@@ -22,6 +21,7 @@ public class MineSweeperInterface extends JPanel {
     public Color[][] colorArray = new Color[TOTAL_COLUMNS][TOTAL_ROWS];
     public boolean[][] bombArray = new boolean[TOTAL_COLUMNS][TOTAL_ROWS];
     public boolean[][] flagArray = new boolean[TOTAL_COLUMNS][TOTAL_ROWS];
+    public int[][] numberArray = new int[TOTAL_COLUMNS][TOTAL_ROWS];
     
     public MineSweeperInterface() {   //This is the constructor... this code runs first to initialize
         if (INNER_CELL_SIZE + (new Random()).nextInt(1) < 1) {    //Use of "random" to prevent unwanted Eclipse warning
@@ -79,7 +79,11 @@ public class MineSweeperInterface extends JPanel {
         			Color c = colorArray[x][y];        		
         			g.setColor(c);
         			g.fillRect(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 1, INNER_CELL_SIZE, INNER_CELL_SIZE);
-        			
+        			if(colorArray[x][y].equals(Color.LIGHT_GRAY) && numberArray[x][y] != 0){
+        				String numbers = String.valueOf(numberArray[x][y]); 
+        				g.setColor(Color.BLACK);
+        				g.drawString(numbers, x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 11, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 18);
+        			}	
         			if(flagArray[x][y] && !(colorArray[x][y].equals(Color.LIGHT_GRAY))){
         				//Flag's pole
         				g.setColor(Color.WHITE);
@@ -278,8 +282,6 @@ public class MineSweeperInterface extends JPanel {
     		}
     	}
     }
-    //Debugging purposes.
-    System.out.println(count);
     return count;
     }
     
