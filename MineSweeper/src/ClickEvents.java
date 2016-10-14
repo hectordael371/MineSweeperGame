@@ -130,13 +130,14 @@ public class ClickEvents extends MouseAdapter {
 						 }
 						else{
 							msPanel.searchBombs();
-							if(false){
+							
+							if(msPanel.counterArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY] == 0){
 								//Clear adjacent blocks
 								msPanel.clearBlocks(); 
 							}
 							else{
 								msPanel.colorArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY] = Color.LIGHT_GRAY;
-								System.out.println(msPanel.numbersArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY]);
+								System.out.println(msPanel.counterArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY]);
 
 							}
 							
@@ -155,7 +156,7 @@ public class ClickEvents extends MouseAdapter {
 				}
 			}
 			myFrame = (JFrame)c;
-			msPanel = (MineSweeperInterface) myFrame.getContentPane().getComponent(0);  //Can also loop among components to find MyPanel
+			msPanel = (MineSweeperInterface) myFrame.getContentPane().getComponent(0);  
 			myInsets = myFrame.getInsets();
 			x1 = myInsets.left;
 			y1 = myInsets.top;

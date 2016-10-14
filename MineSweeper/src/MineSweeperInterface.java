@@ -19,7 +19,7 @@ public class MineSweeperInterface extends JPanel {
     public int mouseDownGridY = 0;
     public Color[][] colorArray = new Color[TOTAL_COLUMNS][TOTAL_ROWS];
     public boolean[][] booleanArray = new boolean[TOTAL_COLUMNS][TOTAL_ROWS];
-    public int[][] numbersArray = new int[TOTAL_COLUMNS][TOTAL_ROWS];
+    public int[][] counterArray = new int[TOTAL_COLUMNS][TOTAL_ROWS];
     
     public MineSweeperInterface() {   //This is the constructor... this code runs first to initialize
         if (INNER_CELL_SIZE + (new Random()).nextInt(1) < 1) {    //Use of "random" to prevent unwanted Eclipse warning
@@ -72,7 +72,7 @@ public class MineSweeperInterface extends JPanel {
         for (int x = 0; x < TOTAL_COLUMNS; x++) {
             for (int y = 0; y < TOTAL_ROWS; y++) {
             	Color c = colorArray[x][y];
-            	numbersArray[x][y] = 0;
+            	counterArray[x][y] = 0;
                 g.setColor(c);
                 g.fillRect(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 1, INNER_CELL_SIZE, INNER_CELL_SIZE);               
             }
@@ -155,49 +155,91 @@ public class MineSweeperInterface extends JPanel {
     
     public void searchBombs(){
     	
-    for(int row=0; row < TOTAL_ROWS -1; row++){
-    	for(int col=0; col < TOTAL_COLUMNS -1; col++){
+    for(int col=0; col < TOTAL_COLUMNS ; col++){
+    	for(int row=0; row < TOTAL_ROWS ; row++){
     		if(booleanArray[col][row]){
     			//if there is a bomb in the mine location then add counter to the nearby mines
-    			
-    			
-    			if(row == 0 && col == 0){
-    				numbersArray[col][row+1] += 1;
-    				numbersArray[col+1][row] += 1;
-        			numbersArray[col+1][row+1] += 1;
-    			}
-    			
-    			
-    			/*
-    			numbersArray[row-1][col-1] 	+= 1;
-    			numbersArray[row-1][col]	+= 1;
-    			numbersArray[row-1][col+1]	+= 1;
-    		
-    			numbersArray[row][col-1] += 1;
-    			numbersArray[row][col+1] += 1;
-    			
-    			numbersArray[row+1][col-1] += 1;
-    			numbersArray[row+1][col] += 1;
-    			numbersArray[row+1][col+1] += 1;
-    			*/
-    			
+		
+    			if(col == 0 && row == 0){
+    				//bomb is in top left border      			     		
+        			counterArray[col+1][row] += 1;
+        			counterArray[col][row+1] += 1;
+        			counterArray[col+1][row+1] += 1;
+    			} if((col == 9) && (row == 0)){
+    				//bomb is in top right
+    				counterArray[col-1][row] 	+= 1;
+    				counterArray[col-1][row+1]	+= 1;
+    				counterArray[col][row+1] 	+= 1;
+    				
+    			} if((col == 9  )&& (row == 9)){
+    				//bomb is in bottom right
+    				counterArray[col][row-1] 	+= 1;
+    				counterArray[col-1][row-1]	+= 1;
+    				counterArray[col-1][row] 	+= 1;
+    				
+    			} if((col == 0 )&& (row == 9 ) ){
+    				//bomb is in bottom left
+    				counterArray[col+1][row] += 1;
+        			counterArray[col][row-1] += 1;
+        			counterArray[col+1][row-1] += 1;
+    			} if(col == 0 && row > 1 && row < 9){
+					//bomb is in left border
+					counterArray[col][row-1] += 1;
+					counterArray[col+1][row-1] += 1;
+					counterArray[col+1][row] += 1;
+					counterArray[col+1][row+1] += 1;
+					counterArray[col][row+1] += 1;
+					
+				} if(row == 0 && col > 1 && col < 9){
+					//bomb is in top border 
+					counterArray[col-1][row] += 1;
+					counterArray[col-1][row+1] += 1;
+					counterArray[col][row+1] += 1;
+					counterArray[col+1][row+1] += 1;
+					counterArray[col+1][row] += 1;
+				} if(col == 9 && row > 1 && row < 9){
+					//bomb is in right border
+					counterArray[col][row-1] += 1;
+					counterArray[col-1][row-1] += 1;
+					counterArray[col-1][row] += 1;
+					counterArray[col-1][row+1] += 1;
+					counterArray[col][row+1] += 1;
+				} if(row == 9 && col > 1 && col < 9){
+					//bomb is in bottom border
+    				counterArray[col-1][row] += 1;
+    				counterArray[col-1][row-1] += 1;
+    				counterArray[col][row-1] += 1;
+    				counterArray[col+1][row-1] += 1;
+    				counterArray[col+1][row] += 1;
+				} if(col>0 && col < 9 && row >0 && row < 9){
+    				//bomb is not in any border
+    				counterArray[col-1][row-1] 	+= 1;
+        			counterArray[col][row-1]	+= 1;
+        			counterArray[col+1][row-1]	+= 1;
+        		
+        			counterArray[col-1][row] += 1;
+        			counterArray[col+1][row] += 1;
+        			
+        			counterArray[col-1][row+1] += 1;
+        			counterArray[col][row+1] += 1;
+        			counterArray[col+1][row+1] += 1;
+        			
+    			}	
     		}
     	}
-    }
-
-    //Debugging purposes.
-    
-    
+    }   
    
     }
     
-    public int clearBlocks(){
+    public void clearBlocks(){
     Color uncovered = Color.LIGHT_GRAY;
-    int count = 0;
     
+    for(int i = 0 ; i < 10; i ++){
+    	
+    	
+    }
    
     
-    return count;
   }
     
     
