@@ -104,6 +104,8 @@ public class ClickEvents extends MouseAdapter {
 				counter++;
 			
 			}
+			if(msPanel.gameLost == false)
+			{
 			if ((msPanel.mouseDownGridX == -1) || (msPanel.mouseDownGridY == -1)) {
 				//Had pressed outside
 				//Do nothing
@@ -120,12 +122,12 @@ public class ClickEvents extends MouseAdapter {
 					}
 					else {
 						//Released the mouse button on the same cell where it was pressed
-						if(msPanel.booleanArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY]){
+						if(msPanel.bombArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY]){
 							//Clicks a bomb
 							msPanel.gameLost = true;
 							msPanel.repaint();
 						 }
-						else{
+						else {
 							if(msPanel.searchBombs() == 0){
 								//Clear adjacent blocks
 								//msPanel.clearAdjacentBlocks();
@@ -133,14 +135,13 @@ public class ClickEvents extends MouseAdapter {
 							}
 							else{
 								msPanel.colorArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY] = Color.LIGHT_GRAY;
-
 							}
-							
-							msPanel.repaint();
-							}
+						}
+						msPanel.repaint();
 						}
 					}
 				}
+			}
             break;
         case 3:        //Right mouse button
 			c = e.getComponent();
@@ -162,6 +163,7 @@ public class ClickEvents extends MouseAdapter {
 			msPanel.y = y;
 			gridX = msPanel.getGridX(x, y);
 			gridY = msPanel.getGridY(x, y);
+			if(msPanel.gameLost == false){
 			if ((msPanel.mouseDownGridX == -1) || (msPanel.mouseDownGridY == -1)) {
 				//Had pressed outside
 				//Do nothing
@@ -178,18 +180,17 @@ public class ClickEvents extends MouseAdapter {
 					}
 					else {
 						//Released the mouse button on the same cell where it was pressed
-						if(msPanel.colorArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY].equals(Color.GRAY)){
-							Color newColor = Color.RED;
-							msPanel.colorArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY] = newColor;
+						if(!(msPanel.flagArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY])){
+							msPanel.flagArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY] = true;
 							msPanel.repaint();
 						}
-						else if(msPanel.colorArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY].equals(Color.RED)){
-							Color newColor = Color.GRAY;
-							msPanel.colorArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY] = newColor;
+						else if(msPanel.flagArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY]){
+							msPanel.flagArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY] = false;
 							msPanel.repaint();
 						}
 					}
 				}
+			}
 			}
 			break;
         default:    //Some other button (2 = Middle mouse button, etc.)
@@ -220,6 +221,7 @@ public class ClickEvents extends MouseAdapter {
 				for(int n=0; n<msPanel.TOTAL_COLUMNS; n++){
 					for(int m=0; m<msPanel.TOTAL_ROWS; m++){
 						msPanel.colorArray[n][m] = Color.GRAY;
+						msPanel.flagArray[n][m] = false;
 					}
 				}
 			}

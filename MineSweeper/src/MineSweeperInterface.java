@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Insets;
+import java.awt.Polygon;
 import java.util.Random;
 
 import javax.swing.JPanel;
@@ -19,7 +20,8 @@ public class MineSweeperInterface extends JPanel {
     public int mouseDownGridY = 0;
     public boolean gameLost = false;
     public Color[][] colorArray = new Color[TOTAL_COLUMNS][TOTAL_ROWS];
-    public boolean[][] booleanArray = new boolean[TOTAL_COLUMNS][TOTAL_ROWS];
+    public boolean[][] bombArray = new boolean[TOTAL_COLUMNS][TOTAL_ROWS];
+    public boolean[][] flagArray = new boolean[TOTAL_COLUMNS][TOTAL_ROWS];
     
     public MineSweeperInterface() {   //This is the constructor... this code runs first to initialize
         if (INNER_CELL_SIZE + (new Random()).nextInt(1) < 1) {    //Use of "random" to prevent unwanted Eclipse warning
@@ -35,6 +37,7 @@ public class MineSweeperInterface extends JPanel {
         for (int x = 0; x < TOTAL_COLUMNS; x++) {  
             for (int y = 0; y < TOTAL_ROWS; y++) {
                 colorArray[x][y] = Color.GRAY;
+                flagArray[x][y] = false;
             }
         }
     }
@@ -67,25 +70,34 @@ public class MineSweeperInterface extends JPanel {
         //Paint cell colors
         for (int x = 0; x < TOTAL_COLUMNS; x++) {
         	for (int y = 0; y < TOTAL_ROWS; y++) {
-        		Color c = null;
-        		if(gameLost && booleanArray[x][y]){
-        			c = Color.RED;
-        			g.setColor(c);
+        		if(gameLost && bombArray[x][y]){
+        			g.setColor(Color.RED);
         			g.fillRect(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 1, INNER_CELL_SIZE, INNER_CELL_SIZE);               
 
         		}
-        		else{
-        			c = colorArray[x][y];        		
+        		else {
+        			Color c = colorArray[x][y];        		
         			g.setColor(c);
-        			g.fillRect(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 1, INNER_CELL_SIZE, INNER_CELL_SIZE);               
-        		}
-        	}
-        }
-        
+        			g.fillRect(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 1, INNER_CELL_SIZE, INNER_CELL_SIZE);
+        			
+        			if(flagArray[x][y] && !(colorArray[x][y].equals(Color.LIGHT_GRAY))){
+        				//Flag's pole
+        				g.setColor(Color.WHITE);
+        				g.drawLine(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 7, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 7, x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 7, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 23);
+        				g.drawLine(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 8, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 7, x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 8, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 23);
+        				//Flag
+        				Polygon flag = new Polygon();
+        				flag.addPoint(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 9, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 7);
+        				flag.addPoint(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 23, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 11);
+        				flag.addPoint(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 9, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 15);
+        				g.setColor(Color.RED);
+        				g.fillPolygon(flag);}
+        			}
+        		}        
         if(gameLost){
 			for(int n=0; n<TOTAL_COLUMNS; n++){
 				for(int m=0; m<TOTAL_ROWS; m++){
-					if(booleanArray[n][m]){
+					if(bombArray[n][m]){
 						//Draw all the bombs.
 				    	Color c = Color.BLACK;
 				        g.setColor(c);
@@ -94,14 +106,15 @@ public class MineSweeperInterface extends JPanel {
 				       //Draw diagonal lines
 				        g.drawLine(x1 + GRID_X + (n * (INNER_CELL_SIZE + 1)) + 8, y1 + GRID_Y + (m * (INNER_CELL_SIZE + 1)) + 8, x1 + GRID_X + (n * (INNER_CELL_SIZE + 1)) + 23, y1 + GRID_Y + (m * (INNER_CELL_SIZE + 1)) + 23);
 				        g.drawLine(x1 + GRID_X + (n * (INNER_CELL_SIZE + 1)) + 8, y1 + GRID_Y + (m * (INNER_CELL_SIZE + 1)) + 23, x1 + GRID_X + (n * (INNER_CELL_SIZE + 1)) + 23, y1 + GRID_Y + (m * (INNER_CELL_SIZE + 1)) + 8);
-				       //Draw horizontal line.
+				       //Draw vertical line.
 				        g.drawLine(x1 + GRID_X + (n * (INNER_CELL_SIZE + 1)) + 16, y1 + GRID_Y + (m * (INNER_CELL_SIZE + 1)) + 4, x1 + GRID_X + (n * (INNER_CELL_SIZE + 1)) + 16, y1 + GRID_Y + (m * (INNER_CELL_SIZE + 1)) + 27);
-				       //Draw vertical line. 
+				       //Draw horizontal line. 
 				        g.drawLine(x1 + GRID_X + (n * (INNER_CELL_SIZE + 1)) + 4, y1 + GRID_Y + (m * (INNER_CELL_SIZE + 1)) + 15, x1 + GRID_X + (n * (INNER_CELL_SIZE + 1)) + 27, y1 + GRID_Y + (m * (INNER_CELL_SIZE + 1)) + 15);
 					}
 				}
 			}
         }
+      }
     }
     public int getGridX(int x, int y) {
         Insets myInsets = getInsets();
@@ -155,7 +168,7 @@ public class MineSweeperInterface extends JPanel {
     	//Set all bombs to false
 		for(int n=0; n<TOTAL_COLUMNS; n++){
 			for(int m=0; m<TOTAL_ROWS; m++){
-                booleanArray[n][m] = false;
+                bombArray[n][m] = false;
 			}
 		}  	
     	for(int i=0; i<numBombs; i++){
@@ -163,13 +176,13 @@ public class MineSweeperInterface extends JPanel {
     		int n = r.nextInt(TOTAL_COLUMNS);
     		int m = r.nextInt(TOTAL_ROWS);
     		
-    		while(booleanArray[n][m] || (n == mouseDownGridX && m == mouseDownGridY)){ 
+    		while(bombArray[n][m] || (n == mouseDownGridX && m == mouseDownGridY)){ 
     			//This is to avoid setting a random bomb on top of another random bomb or on the clicked grid.
     			n = r.nextInt(TOTAL_COLUMNS);
     			m = r.nextInt(TOTAL_ROWS);
     		}
     		
-    		booleanArray[n][m] = true;
+    		bombArray[n][m] = true;
     	}
     }
     public int searchBombs(){
@@ -179,7 +192,7 @@ public class MineSweeperInterface extends JPanel {
     	for(int n=mouseDownGridX; n<=mouseDownGridX+1; n++){
     		for(int m=mouseDownGridY; m<=mouseDownGridY+1;m++){
     			if(!(n==mouseDownGridX && m==mouseDownGridY))
-    				if(booleanArray[n][m])
+    				if(bombArray[n][m])
     					count++;
     		}
     	}
@@ -189,7 +202,7 @@ public class MineSweeperInterface extends JPanel {
     	for(int n=mouseDownGridX; n<=mouseDownGridX+1; n++){
     		for(int m=mouseDownGridY-1; m<=mouseDownGridY+1; m++){
     			if(!(n==mouseDownGridX && m==mouseDownGridY))
-    				if(booleanArray[n][m])
+    				if(bombArray[n][m])
     					count++;
     		}
     	}
@@ -199,7 +212,7 @@ public class MineSweeperInterface extends JPanel {
     	for(int n=mouseDownGridX; n<=mouseDownGridX+1; n++){
     		for(int m=mouseDownGridY-1; m<=mouseDownGridY; m++){
     			if(!(n==mouseDownGridX && m==mouseDownGridY))
-    				if(booleanArray[n][m])
+    				if(bombArray[n][m])
     					count++;
     		}
     	}
@@ -209,7 +222,7 @@ public class MineSweeperInterface extends JPanel {
     	for(int n=mouseDownGridX-1; n<=mouseDownGridX+1;n++){
     		for(int m=mouseDownGridY-1; m<=mouseDownGridY; m++){
     			if(!(n==mouseDownGridX && m==mouseDownGridY))
-    				if(booleanArray[n][m])
+    				if(bombArray[n][m])
     					count++;
     		}
     	}
@@ -219,7 +232,7 @@ public class MineSweeperInterface extends JPanel {
     	for(int n=mouseDownGridX-1; n<=mouseDownGridX; n++){
     		for(int m=mouseDownGridY-1; m<=mouseDownGridY; m++){
     			if(!(n==mouseDownGridX && m==mouseDownGridY))
-    				if(booleanArray[n][m])
+    				if(bombArray[n][m])
     					count++;
     		}
     	}
@@ -229,7 +242,7 @@ public class MineSweeperInterface extends JPanel {
     	for(int n=mouseDownGridX-1; n<=mouseDownGridX; n++){
     		for(int m=mouseDownGridY-1; m<=mouseDownGridY+1; m++){
     			if(!(n==mouseDownGridX && m==mouseDownGridY)){
-    				if(booleanArray[n][m])
+    				if(bombArray[n][m])
     					count++;
     			}
     		}
@@ -240,7 +253,7 @@ public class MineSweeperInterface extends JPanel {
     	for(int n=mouseDownGridX-1; n<=mouseDownGridX; n++){
     		for(int m=mouseDownGridY; m<=mouseDownGridY+1; m++){
     			if(!(n==mouseDownGridX && m==mouseDownGridY))
-    				if(booleanArray[n][m])
+    				if(bombArray[n][m])
     					count++;
     		}
     	}
@@ -250,7 +263,7 @@ public class MineSweeperInterface extends JPanel {
     	for(int n=mouseDownGridX-1; n<=mouseDownGridX+1; n++){
     		for(int m=mouseDownGridY; m<=mouseDownGridY+1; m++){
     			if(!(n==mouseDownGridX && m==mouseDownGridY))
-    				if(booleanArray[n][m])
+    				if(bombArray[n][m])
     					count++;
     		}
     	}
@@ -260,7 +273,7 @@ public class MineSweeperInterface extends JPanel {
     	for(int n=mouseDownGridX-1; n<=mouseDownGridX+1; n++){
     		for(int m=mouseDownGridY-1; m<=mouseDownGridY+1; m++){
     			if(!(n==mouseDownGridX && m==mouseDownGridY))
-    				if(booleanArray[n][m])
+    				if(bombArray[n][m])
     					count++;
     		}
     	}
@@ -339,7 +352,7 @@ public class MineSweeperInterface extends JPanel {
     public void clearAdjacentBlocks(){
     	for(int i=mouseDownGridX-1; i<=mouseDownGridX+1; i++){
     		for(int j=mouseDownGridY-1; j<=mouseDownGridY+1; j++){
-    			if(!(booleanArray[i][j])){
+    			if(!(bombArray[i][j])){
     				clearBlocks();
     			}
     		}
