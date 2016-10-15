@@ -3,7 +3,9 @@ import java.awt.Component;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class ClickEvents extends MouseAdapter {
 	int counter = 0;
@@ -124,7 +126,10 @@ public class ClickEvents extends MouseAdapter {
 						//Released the mouse button on the same cell where it was pressed
 						if(msPanel.bombArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY]){
 							//Clicks a bomb
+							
+							
 							msPanel.gameLost = true;
+							
 						 }
 						else {
 							if(msPanel.searchBombs(msPanel.mouseDownGridX, msPanel.mouseDownGridY) == 0){
@@ -136,7 +141,12 @@ public class ClickEvents extends MouseAdapter {
 								msPanel.numberArray[msPanel.mouseDownGridX][msPanel.mouseDownGridY] = msPanel.searchBombs(msPanel.mouseDownGridX, msPanel.mouseDownGridY);
 							}
 						}
+						
+						
 						msPanel.repaint();
+						if(msPanel.gameLost){
+							JOptionPane.showMessageDialog(null, "you lose.", "MineSweeperGame", JOptionPane.INFORMATION_MESSAGE);
+						}
 						}
 					}
 				}

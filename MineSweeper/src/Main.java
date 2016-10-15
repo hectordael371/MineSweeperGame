@@ -1,4 +1,5 @@
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class Main {
     public static void main(String[] args) {
@@ -8,6 +9,7 @@ public class Main {
         minesweeperFrame.setSize(370, 390);
         
         //New interface of the game, 9x9
+        
         MineSweeperInterface minesweeperPanel = new MineSweeperInterface();
         minesweeperFrame.add(minesweeperPanel);
 
@@ -21,5 +23,6 @@ public class Main {
         
         //Sets the minesweeperFrame to visible
         minesweeperFrame.setVisible(true);
+        JOptionPane.showMessageDialog(null, "How to Play: \nLeft click to uncover mines.\nUncovering a mines will tell you how many adjecent bombs there are\nRight click to flag mines\n", "MineSweeperGame", JOptionPane.INFORMATION_MESSAGE);
     }
 }
